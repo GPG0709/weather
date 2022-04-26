@@ -33,18 +33,27 @@ weather_data = JSON.parse(response)
 # Use a loop to display the daily summary for the upcoming forecast.
 
 # 1. inspect the weather_data hash
-#puts weather_data
-city = weather_data["region"]
-today = [ ]
-forecast = [ ]
-today[0] = weather_data["currentConditions"]["temp"]["c"]
-today[1] = weather_data["currentConditions"]["comment"]
+# puts weather_data
+# city = weather_data["region"]
+# today = [ ]
+forecasts = [ ]
+# today[0] = weather_data["currentConditions"]["temp"]["c"]
+# today[1] = weather_data["currentConditions"]["comment"]
 
-forecast[0] = [weather_data["next_days"]["day"], weather_data["next_days"]["day"]["max_temp"]["c"], weather_data["next_days"]["day"]["comment"]]
+i = 0
+while i <= weather_data["next_days"].size
+    forecasts[i]= [weather_data["next_days"][i]["day"],
+    weather_data["next_days"][i]["max_temp"]["c"],
+    weather_data["next_days"][i]["min_temp"]["c"],
+    weather_data["next_days"][i]["comment"]]
+    
+    i = i+1
+end
 
-puts "In #{city} it is currently #{today[0]} degrees and #{today[1]}"
-puts "The following days will be:"
-puts forecast[0]
+puts forecasts[0]
+# puts "In #{city} it is currently #{today[0]} degrees and #{today[1]}"
+# puts "The following days will be:"
+# puts forecasts[0]
 
 
 
