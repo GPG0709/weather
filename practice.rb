@@ -1,11 +1,23 @@
 # DON'T CHANGE THIS CODE
 # ----------------------
-require "net/http"
-require "json"
-url = "https://weatherdbi.herokuapp.com/data/weather/chicago"
-uri = URI(url)
-response = Net::HTTP.get(uri)
-weather_data = JSON.parse(response)
+inicio = false
+while inicio == false
+    puts "The weather from which city do you want?"
+    city = gets.chomp
+    city = city.gsub(" ", "")
+    require "net/http"
+    require "json"
+    url = "https://weatherdbi.herokuapp.com/data/weather/#{city}"
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    weather_data = JSON.parse(response)
+
+    if weather_data["status"] != "fail"
+    inicio = true
+    elsif weather_data["status"] == "fail"
+        puts "Try again. The city could not be found"
+    end
+end
 # ----------------------
 
 # EXERCISE
@@ -33,24 +45,39 @@ weather_data = JSON.parse(response)
 # Use a loop to display the daily summary for the upcoming forecast.
 
 # 1. inspect the weather_data hash
-# puts weather_data
-# city = weather_data["region"]
-# today = [ ]
-forecasts = [ ]
-# today[0] = weather_data["currentConditions"]["temp"]["c"]
-# today[1] = weather_data["currentConditions"]["comment"]
+puts weather_data
+city = weather_data["region"]
 
-i = 0
-while i <= weather_data["next_days"].size
-    forecasts[i]= [weather_data["next_days"][i]["day"],
-    weather_data["next_days"][i]["max_temp"]["c"],
-    weather_data["next_days"][i]["min_temp"]["c"],
-    weather_data["next_days"][i]["comment"]]
-    
-    i = i+1
+current_temp = weather_data["currentConditions"]["temp"]["c"]
+current_condition = weather_data["currentConditions"]["comment"]
+puts "In #{city}, it is currently #{current_temp}C and #{current_condition}."
+
+today_forecast = weather_data["next_days"][0]
+puts "The rest of today will be a high of #{today_forecast["max_temp"]["c"]}C and #{today_forecast["comment"]}."
+
+for daily_forecast in weather_data["next_days"]
+    weekday = daily_forecast["day"]
+    high_temp = daily_forecast["max_temp"]["c"]
+    low_temp = daily_forecast["min_temp"]["c"]
+    condition = daily_forecast["comment"]
+    puts "#{weekday}: a minimum of #{low_temp}C, a maximum of #{high_temp}C, and #{condition}."
 end
 
-puts forecasts[0]
+# current = [ ]
+# forecasts = [ ]
+
+
+# # i = 0
+# # while i <= weather_data["next_days"].size
+# #     forecasts[i]= [weather_data["next_days"][i]["day"],
+# #     weather_data["next_days"][i]["max_temp"]["c"],
+# #     weather_data["next_days"][i]["min_temp"]["c"],
+# #     weather_data["next_days"][i]["comment"]]
+    
+#     i = i+1
+# end
+
+# puts forecasts[0]
 # puts "In #{city} it is currently #{today[0]} degrees and #{today[1]}"
 # puts "The following days will be:"
 # puts forecasts[0]
